@@ -6,6 +6,8 @@ rm -rf gitbook
 mkdir gitbook
 cp -R publish/* gitbook/
 cp README.md gitbook/
+cp tools/cover.jpg gitbook/
+cp tools/cover_small.jpg gitbook/
 
 cd gitbook
 
@@ -28,5 +30,14 @@ do
     cmd="ssed -i '1i\\"$title"' "$filename
     result=`sh -c "$cmd"`
 done
+
+for item in `awk '/^\*.*$/ {print $0}' SUMMARY.md`
+do
+    filename=`echo $item|sed -e 's/* //'`'.md'
+    echo "">$filename
+done
+
 IFS=$oldIFS
+
+sed -ig 's/^\* \(.*\)/\* [\1](\1.md)/' SUMMARY.md
 
